@@ -142,10 +142,19 @@ int OnCalculate(const int rates_total,
     }
 
 
+
+
+
+
     //my testing to compare
-    // Comment("ExtMainBuffer : "+ ExtMainBuffer[rates_total-1]+"\n"+
-    //         "ExtSignalBuffer : "+ExtSignalBuffer[rates_total-1]
-    // );
+//    if (ExtMainBuffer[rates_total-1] > ExtSignalBuffer[rates_total-1])
+//     {
+//         Comment("Buy"+"\n"+"Level : "+ ExtMainBuffer[rates_total-1]);
+//     }else
+//        {
+//         Comment("Sell"+"\n"+"Level : "+ ExtSignalBuffer[rates_total-1]);
+//        }
+    
     
 
 
@@ -155,15 +164,15 @@ int OnCalculate(const int rates_total,
 }
 //+------------------------------------------------------------------+
 
-void BuySellAI()
+void BuySellAI(double main, double signal)
 {
     //check over buy (20) in M5 and signal above main
     //check over buy (20) in M1 and signal above main
-    //if current currency have no positioned than place sell 0.01
+    //if current currency have no positioned than place buy 0.01
 
     //check over sell (80) in M5 and signal below main
     //check over sell (80) in M1 and signal below main
-    //if current currency have no positioned than place buy 0.01
+    //if current currency have no positioned than place sell 0.01
 }
 
 void StopLossTakeProfitAI()
@@ -173,8 +182,12 @@ void StopLossTakeProfitAI()
     //if current possitioned is buy and M5 signal above main than close
 }
 
-// bool UpDown(ENUM_TIMEFRAMES time){
+//  bool UpDown(ENUM_TIMEFRAMES time){
     //true is up
     //false is down
-    // return true;
-// }
+
+//     return true;
+//  }
+
+
+
