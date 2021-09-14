@@ -6,6 +6,13 @@
 #property copyright "Copyright 2021, phanet"
 #property link      "https://www.mql5.com"
 #property version   "1.00"
+
+#include <Trade\Trade.mqh>
+
+CTrade trade;
+
+
+
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
@@ -34,38 +41,19 @@ void OnTick()
            "M5 : "+ CheckSignal(PERIOD_M5)+"\n"+
            "M15 : "+CheckSignal(PERIOD_M15)+"\n");
 
+
+
 //get signal by specific timeframe
    string M1 = CheckSignal(PERIOD_M1);
    string M5 = CheckSignal(PERIOD_M5);
    string M15 = CheckSignal(PERIOD_M15);
 
 //check for close
+   Close(M5);
 
 
-
-//check for buy
-   if(M1=="buy" && M5 == "buy" && M15 == "buy")
-     {
-      //if there is no position of current currency
-      if(condition)
-        {
-
-        }
-     }
-
-
-//check for sale
-   if(M1=="sale" && M5=="sale" && M15=="sale")
-     {
-     //if there is no position of current currency
-     if(condition)
-       {
-        
-       }
-     }
-
-
-
+//check for buy/sell
+   BuySell(M1,M5,M15);
 
 
   }
@@ -135,5 +123,83 @@ string CheckSignal(ENUM_TIMEFRAMES timeframe)
      }
 
    return signal;
+  }
+//+------------------------------------------------------------------+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void BuySell(string M1, string M5, string M15)
+  {
+//trade.PositionClose(_Symbol);
+
+   double Ask = NormalizeDouble(SymbolInfoDouble(_Symbol,SYMBOL_ASK),_Digits);
+   double Bid = NormalizeDouble(SymbolInfoDouble(_Symbol,SYMBOL_BID),_Digits);
+
+//check for buy
+   if(M1=="buy" && M5 == "buy" && M15 == "buy")
+     {
+      //if there is no position of current currency
+      bool hasPositioned=false;
+      for(int i=0; i<PositionsTotal(); i++)
+        {
+         if(PositionGetSymbol(i)==_Symbol)
+           {
+            hasPositioned = true;
+           }
+        }
+
+      if(!hasPositioned)
+        {
+         trade.Buy(0.01, _Symbol,Ask,0,0,NULL);
+        }
+     }
+
+
+//check for sale
+   if(M1=="sale" && M5=="sale" && M15=="sale")
+     {
+      //if there is no position of current currency
+      bool hasPositioned = false;
+      for(int i=0; i<PositionsTotal(); i++)
+        {
+         if(PositionGetSymbol(i)==_Symbol)
+           {
+            hasPositioned=true;
+           }
+        }
+
+      if(!hasPositioned)
+        {
+         trade.Sell(0.01, _Symbol,Bid,0,0,NULL);
+        }
+     }
+  }
+//+------------------------------------------------------------------+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void Close(string period)
+  {
+
+   for(int i=0; i<PositionsTotal(); i++)
+     {
+      if(PositionGetSymbol(i)==_Symbol)
+        {
+         ENUM_POSITION_TYPE pType = (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE);
+         if(pType==POSITION_TYPE_BUY && period == "sell")
+           {
+            trade.PositionClose(_Symbol);
+           }
+
+         if(pType==POSITION_TYPE_SELL && period == "buy")
+           {
+            trade.PositionClose(_Symbol);
+           }
+        }
+     }
   }
 //+------------------------------------------------------------------+
