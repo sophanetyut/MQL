@@ -29,6 +29,54 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void OnTick()
   {
+
+   Comment("M1 : "+CheckSignal(PERIOD_M1)+"\n"+
+           "M5 : "+ CheckSignal(PERIOD_M5)+"\n"+
+           "M15 : "+CheckSignal(PERIOD_M15)+"\n");
+
+//get signal by specific timeframe
+   string M1 = CheckSignal(PERIOD_M1);
+   string M5 = CheckSignal(PERIOD_M5);
+   string M15 = CheckSignal(PERIOD_M15);
+
+//check for close
+
+
+
+//check for buy
+   if(M1=="buy" && M5 == "buy" && M15 == "buy")
+     {
+      //if there is no position of current currency
+      if(condition)
+        {
+
+        }
+     }
+
+
+//check for sale
+   if(M1=="sale" && M5=="sale" && M15=="sale")
+     {
+     //if there is no position of current currency
+     if(condition)
+       {
+        
+       }
+     }
+
+
+
+
+
+  }
+
+
+
+
+//method to return the signal by specific timeframe
+string CheckSignal(ENUM_TIMEFRAMES timeframe)
+  {
+
    string signal="";
 
 //arry for k-line and d-line
@@ -40,7 +88,7 @@ void OnTick()
    ArraySetAsSeries(DArray,true);
 
 //defind EZ, current candle, 3 candles, save result
-   int StochasticDefinition=iStochastic(_Symbol,PERIOD_CURRENT,8,3,3,MODE_SMA,STO_LOWHIGH);
+   int StochasticDefinition=iStochastic(_Symbol,timeframe,8,3,3,MODE_SMA,STO_LOWHIGH);
 
 //fill the array with price data
    CopyBuffer(StochasticDefinition,0,0,3,KArray);
@@ -74,25 +122,18 @@ void OnTick()
 // if the k-value has crossed the d-value from above
    if((KValue0<DValue0) && (KValue1>DValue1))
      {
-     
-     //if has position with curent currency than close position
-     
-     
-     
+
+      //if has position with curent currency than close position
+
+
+
       //if both values are above 80
       if(KValue0>80 && DValue0>80)
         {
-        signal="sell";
+         signal="sell";
         }
      }
-     
-     
 
+   return signal;
   }
 //+------------------------------------------------------------------+
-
-
-string CheckSignal(){
-
-
-}
