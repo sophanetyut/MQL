@@ -37,23 +37,22 @@ void OnDeinit(const int reason)
 void OnTick()
   {
 
-   Comment("M1 : "+CheckSignal(PERIOD_M1)+"\n"+
-           "M5 : "+ CheckSignal(PERIOD_M5)+"\n"+
-           "M15 : "+CheckSignal(PERIOD_M15)+"\n");
+   Comment(
+      "M5 : "+ CheckSignal(PERIOD_M5)+"\n"+
+      "M5 : "+ CheckSignal(PERIOD_M15)+"\n");
 
 
 
 //get signal by specific timeframe
-   string M1 = CheckSignal(PERIOD_M1);
    string M5 = CheckSignal(PERIOD_M5);
    string M15 = CheckSignal(PERIOD_M15);
 
 //check for close
-   Close(M5);
+   Close(M15);
 
 
 //check for buy/sell
-   BuySell(M1,M5,M15);
+   BuySell(M5,M15);
 
 
   }
@@ -130,7 +129,7 @@ string CheckSignal(ENUM_TIMEFRAMES timeframe)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void BuySell(string M1, string M5, string M15)
+void BuySell(string M5, string M15)
   {
 //trade.PositionClose(_Symbol);
 
@@ -138,7 +137,7 @@ void BuySell(string M1, string M5, string M15)
    double Bid = NormalizeDouble(SymbolInfoDouble(_Symbol,SYMBOL_BID),_Digits);
 
 //check for buy
-   if(M1=="buy" && M5 == "buy" && M15 == "buy")
+   if(M5 == "buy" && M15 == "buy")
      {
       //if there is no position of current currency
       bool hasPositioned=false;
@@ -152,13 +151,13 @@ void BuySell(string M1, string M5, string M15)
 
       if(!hasPositioned)
         {
-         trade.Buy(0.01, _Symbol,Ask,0,0,NULL);
+         trade.Buy(0.01, _Symbol,Ask,20,0,NULL);
         }
      }
 
 
 //check for sale
-   if(M1=="sale" && M5=="sale" && M15=="sale")
+   if(M5=="sale" && M15=="sale")
      {
       //if there is no position of current currency
       bool hasPositioned = false;
@@ -172,7 +171,7 @@ void BuySell(string M1, string M5, string M15)
 
       if(!hasPositioned)
         {
-         trade.Sell(0.01, _Symbol,Bid,0,0,NULL);
+         trade.Sell(0.01, _Symbol,Bid,20,0,NULL);
         }
      }
   }
