@@ -37,9 +37,8 @@ void OnDeinit(const int reason)
 void OnTick()
   {
 
-   Comment(
-      "M5 : "+ CheckSignal(PERIOD_M5)+"\n"+
-      "M5 : "+ CheckSignal(PERIOD_M15)+"\n");
+   Comment("M5 : "+ CheckSignal(PERIOD_M5)+"\n"+
+           "M15 : "+CheckSignal(PERIOD_M15)+"\n");
 
 
 
@@ -48,7 +47,7 @@ void OnTick()
    string M15 = CheckSignal(PERIOD_M15);
 
 //check for close
-   Close(M15);
+   Close(M5);
 
 
 //check for buy/sell
@@ -151,7 +150,7 @@ void BuySell(string M5, string M15)
 
       if(!hasPositioned)
         {
-         trade.Buy(0.01, _Symbol,Ask,20,0,NULL);
+         trade.Buy(0.01, _Symbol,Ask,0,0,NULL);
         }
      }
 
@@ -171,7 +170,7 @@ void BuySell(string M5, string M15)
 
       if(!hasPositioned)
         {
-         trade.Sell(0.01, _Symbol,Bid,20,0,NULL);
+         trade.Sell(0.01, _Symbol,Bid,0,0,NULL);
         }
      }
   }
@@ -179,7 +178,7 @@ void BuySell(string M5, string M15)
 
 
 //+------------------------------------------------------------------+
-//|                                                                  |
+//| Close function is used for check condition to close the position |
 //+------------------------------------------------------------------+
 void Close(string period)
   {
